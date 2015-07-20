@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="stack_early_morning">#FF150840</color>
+    <color name="stack_morning">#e1ce81</color>
+    <color name="stack_afternoon">#ffC4DB89</color>
+    <color name="stack_evening">#ff447892</color>
+</resources>

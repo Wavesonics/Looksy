@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="@string/settings_reports_category_title">
+        <CheckBoxPreference
+            android:title="@string/settings_reports_enable_title"
+            android:defaultValue="true"
+            android:summary="@string/settings_reports_enable_summary"
+            android:key="reports_enable"/>
+        <com.darkrockstudios.apps.looksy.settings.TimePreference
+            android:key="reports_time"
+            android:title="@string/settings_reports_display_time_title"
+            android:defaultValue="12:00"
+            android:dependency="reports_enable"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Debug">
+        <com.darkrockstudios.apps.looksy.settings.DebugInsertDataPreference/>
+    </PreferenceCategory>
+</PreferenceScreen>
