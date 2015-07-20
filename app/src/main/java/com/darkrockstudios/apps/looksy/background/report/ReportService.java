@@ -24,7 +24,7 @@ import java.util.List;
 
 public class ReportService extends IntentService
 {
-	public static final String TAG = IntentService.class.getSimpleName();
+	public static final String TAG = ReportService.class.getSimpleName();
 
 	public static final int NOTIFICATION_ID_REPORT = 1;
 
