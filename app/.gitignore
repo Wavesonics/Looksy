@@ -1,1 +1,6 @@
 /build
+
+Thumbs.db
+/gradle.properties
+*.keystore
+*.iml

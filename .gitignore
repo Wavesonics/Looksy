@@ -1,7 +1,11 @@
 .gradle
 /local.properties
-/.idea/workspace.xml
-/.idea/libraries
+/.idea/
 .DS_Store
 /build
 /captures
+
+Thumbs.db
+/gradle.properties
+*.keystore
+*.iml
