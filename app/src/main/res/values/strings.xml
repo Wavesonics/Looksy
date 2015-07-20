@@ -3,6 +3,12 @@
 
     <string name="action_settings">Settings</string>
 
+    <string name="nav_drawer_open">Open</string>
+    <string name="nav_drawer_close">Close</string>
+
+    <string name="nav_item_home">Home</string>
+    <string name="nav_item_daily">Daily Stats</string>
+
     <string name="y_label">Unlocks</string>
 
     <string name="summary">Total unlocks so far today: %1$d\nTotal unlocks yesterday: %2$d\nTotal unlocks ever: %3$d</string>

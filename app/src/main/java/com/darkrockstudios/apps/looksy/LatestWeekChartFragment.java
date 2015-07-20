@@ -163,32 +163,38 @@ public class LatestWeekChartFragment extends Fragment
 		@Override
 		protected BarData doInBackground( Void... params )
 		{
-			List<String> xVals = new ArrayList<>();
+			BarData barData = null;
 
-			List<BarEntry> dataEntry = new ArrayList<>();
-			final int MAX_DAYS = 7;
-			for( int ii = 0; ii < MAX_DAYS; ++ii )
+			if( isAdded() )
 			{
-				final int day = MAX_DAYS - (ii + 1);
-				addEntriesForDay( ii, day, dataEntry );
-				if( day == 0 )
+				List<String> xVals = new ArrayList<>();
+
+				List<BarEntry> dataEntry = new ArrayList<>();
+				final int MAX_DAYS = 7;
+				for( int ii = 0; ii < MAX_DAYS; ++ii )
 				{
-					xVals.add( getString( R.string.chart_today ) );
+					final int day = MAX_DAYS - (ii + 1);
+					addEntriesForDay( ii, day, dataEntry );
+					if( day == 0 )
+					{
+						xVals.add( getString( R.string.chart_today ) );
+					}
+					else
+					{
+						xVals.add( ReportUtils.getStartOfDay( day ).dayOfWeek().getAsText() );
+					}
 				}
-				else
-				{
-					xVals.add( ReportUtils.getStartOfDay( day ).dayOfWeek().getAsText() );
-				}
+
+				List<BarDataSet> dataSets = new ArrayList<>();
+				BarDataSet set = new BarDataSet( dataEntry, null );
+				set.setColors( getColors() );
+				set.setStackLabels( getStackLabels() );
+				set.setValueFormatter( s_valueFormatter );
+				dataSets.add( set );
+
+				barData = new BarData( xVals, dataSets );
 			}
 
-			List<BarDataSet> dataSets = new ArrayList<>();
-			BarDataSet set = new BarDataSet( dataEntry, null );
-			set.setColors( getColors() );
-			set.setStackLabels( getStackLabels() );
-			set.setValueFormatter( s_valueFormatter );
-			dataSets.add( set );
-
-			BarData barData = new BarData( xVals, dataSets );
 			return barData;
 		}
 
@@ -196,11 +202,14 @@ public class LatestWeekChartFragment extends Fragment
 		protected void onPostExecute( BarData barData )
 		{
 			m_populateChartTask = null;
-			m_chartView.setData( barData );
-			m_chartView.invalidate();
+			if( isAdded() )
+			{
+				m_chartView.setData( barData );
+				m_chartView.invalidate();
 
-			m_progressBarView.setVisibility( View.INVISIBLE );
-			m_chartView.setVisibility( View.VISIBLE );
+				m_progressBarView.setVisibility( View.INVISIBLE );
+				m_chartView.setVisibility( View.VISIBLE );
+			}
 		}
 	}
 

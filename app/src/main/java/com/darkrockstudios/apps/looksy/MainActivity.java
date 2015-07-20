@@ -1,30 +1,34 @@
 package com.darkrockstudios.apps.looksy;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.view.View;
 
-import com.darkrockstudios.apps.looksy.data.Unlock;
 import com.darkrockstudios.apps.looksy.settings.SettingsActivity;
-
-import org.joda.time.DateTime;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class MainActivity extends AppCompatActivity
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
-	@Bind(R.id.test_view)
-	TextView m_testView;
+	private static final long DRAWER_CLOSE_DELAY_MS = 250;
 
-	@Bind(R.id.chart_fragment_container)
-	ViewGroup m_fragmentContainerView;
+	@Bind(R.id.nav_drawer)
+	DrawerLayout m_drawerLayout;
+
+	@Bind(R.id.navigation)
+	NavigationView m_navigationView;
+
+	private Handler                     m_uiHandler;
+	private LooksyActionBarDrawerToggle m_drawerToggle;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -33,37 +37,97 @@ public class MainActivity extends AppCompatActivity
 		setContentView( R.layout.activity_main );
 		ButterKnife.bind( this );
 
-		getSupportFragmentManager().beginTransaction()
-		                           .replace( R.id.chart_fragment_container, LatestWeekChartFragment.newInstance() ).commit();
+		m_uiHandler = new Handler();
 
-		updateViews();
-	}
+		m_navigationView.setNavigationItemSelectedListener( this );
 
-	private void updateViews()
-	{
-		final DateTime startToday = ReportUtils.getStartOfToday();
+		m_drawerToggle = new LooksyActionBarDrawerToggle( this, m_drawerLayout );
+		m_drawerLayout.setDrawerListener( m_drawerToggle );
 
-		DateTime end = DateTime.now();
+		getSupportActionBar().setDisplayHomeAsUpEnabled( true );
+		getSupportActionBar().setHomeButtonEnabled( true );
 
-		List<Unlock> today = Unlock.getAllInRange( startToday, end );
-		List<Unlock> today_1 = Unlock.getAllInRange( ReportUtils.getStartOfYesterday(), startToday );
-		List<Unlock> allUnlocks = Unlock.getAll();
-
-		m_testView.setText( getString( R.string.summary, today.size(), today_1.size(), allUnlocks.size() ) );
+		if( savedInstanceState == null )
+		{
+			getSupportFragmentManager().beginTransaction()
+			                           .replace( R.id.content_container, HomeFragment.newInstance() ).commit();
+		}
 	}
 
 	@Override
-	protected void onResume()
+	protected void onPostCreate( Bundle savedInstanceState )
 	{
-		super.onResume();
+		super.onPostCreate( savedInstanceState );
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		m_drawerToggle.syncState();
+	}
 
-		updateViews();
+	@Override
+	public void onConfigurationChanged( Configuration newConfig )
+	{
+		super.onConfigurationChanged( newConfig );
+		m_drawerToggle.onConfigurationChanged( newConfig );
+	}
+
+	@Override
+	public boolean onNavigationItemSelected( final MenuItem menuItem )
+	{
+		menuItem.setChecked( true );
+
+		m_uiHandler.postDelayed( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				navigateTo( menuItem.getItemId() );
+			}
+		}, DRAWER_CLOSE_DELAY_MS );
+
+		m_drawerLayout.closeDrawers();
+
+		return true;
+	}
+
+	private void navigateTo( final int itemId )
+	{
+		switch( itemId )
+		{
+			case R.id.navigation_item_home:
+				getSupportFragmentManager().beginTransaction()
+				                           .replace( R.id.content_container, HomeFragment.newInstance() ).commit();
+				break;
+			case R.id.navigation_item_daily:
+				getSupportFragmentManager().beginTransaction()
+				                           .replace( R.id.content_container, DailyStatsFragment.newInstance() ).commit();
+				break;
+		}
+	}
+
+	private class LooksyActionBarDrawerToggle extends android.support.v7.app.ActionBarDrawerToggle
+	{
+		public LooksyActionBarDrawerToggle( Activity activity, DrawerLayout drawerLayout )
+		{
+			super( activity, drawerLayout, R.string.nav_drawer_open, R.string.nav_drawer_close );
+		}
+
+		public void onDrawerClosed( View view )
+		{
+			super.onDrawerClosed( view );
+			//getSupportActionBar().setTitle( R.string.app_name );
+			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+		}
+
+		public void onDrawerOpened( View drawerView )
+		{
+			super.onDrawerOpened( drawerView );
+			//getSupportActionBar().setTitle( R.string.app_name );
+			invalidateOptionsMenu(); // creates call to onPrepareOptionsMenu()
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu )
 	{
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate( R.menu.menu_main, menu );
 		return true;
 	}
@@ -71,18 +135,23 @@ public class MainActivity extends AppCompatActivity
 	@Override
 	public boolean onOptionsItemSelected( MenuItem item )
 	{
-		// Handle action bar item clicks here. The action bar will
-		// automatically handle clicks on the Home/Up button, so long
-		// as you specify a parent activity in AndroidManifest.xml.
-		int id = item.getItemId();
+		final boolean handled;
 
-		//noinspection SimplifiableIfStatement
+		final int id = item.getItemId();
 		if( id == R.id.action_settings )
 		{
 			startActivity( new Intent( this, SettingsActivity.class ) );
-			return true;
+			handled = true;
+		}
+		else if( m_drawerToggle.onOptionsItemSelected( item ) )
+		{
+			handled = true;
+		}
+		else
+		{
+			handled = super.onOptionsItemSelected( item );
 		}
 
-		return super.onOptionsItemSelected( item );
+		return handled;
 	}
 }
