@@ -1,5 +1,6 @@
 package com.darkrockstudios.apps.looksy;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -20,6 +21,8 @@ import butterknife.Bind;
  */
 public class HomeFragment extends BaseFragment
 {
+	private PopulateDataTask m_populateTask;
+
 	@Bind(R.id.test_view)
 	TextView m_testView;
 
@@ -54,11 +57,19 @@ public class HomeFragment extends BaseFragment
 
 	private void updateViews()
 	{
-		final DateTime startToday = ReportUtils.getStartOfToday();
-		DateTime end = DateTime.now();
-		List<Unlock> today = Unlock.getAllInRange( startToday, end );
+		cancelTask();
 
-		m_testView.setText( getString( R.string.home_summary, today.size() ) );
+		m_populateTask = new PopulateDataTask();
+		m_populateTask.execute();
+	}
+
+	private void cancelTask()
+	{
+		if( m_populateTask != null )
+		{
+			m_populateTask.cancel( true );
+			m_populateTask = null;
+		}
 	}
 
 	@Override
@@ -67,5 +78,36 @@ public class HomeFragment extends BaseFragment
 		super.onResume();
 
 		updateViews();
+	}
+
+	@Override
+	public void onPause()
+	{
+		super.onPause();
+		cancelTask();
+	}
+
+	private class PopulateDataTask extends AsyncTask<Void, Void, Integer>
+	{
+		@Override
+		protected Integer doInBackground( Void... params )
+		{
+			final DateTime startToday = ReportUtils.getStartOfToday();
+			DateTime end = DateTime.now();
+			List<Unlock> today = Unlock.getAllInRange( startToday, end );
+
+			return today.size();
+		}
+
+		@Override
+		protected void onPostExecute( Integer unlocksToday )
+		{
+			super.onPostExecute( unlocksToday );
+
+			if( isAdded() )
+			{
+				m_testView.setText( getString( R.string.home_summary, unlocksToday ) );
+			}
+		}
 	}
 }

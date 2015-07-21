@@ -1,5 +1,6 @@
 package com.darkrockstudios.apps.looksy;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -20,6 +21,8 @@ import butterknife.Bind;
  */
 public class LifeTimeStatsFragment extends BaseFragment
 {
+	private PopulateDataTask m_populateTask;
+
 	@Bind(R.id.LIFETIME_summary)
 	TextView m_summaryView;
 
@@ -45,6 +48,23 @@ public class LifeTimeStatsFragment extends BaseFragment
 		return view;
 	}
 
+	private void cancelTask()
+	{
+		if( m_populateTask != null )
+		{
+			m_populateTask.cancel( true );
+			m_populateTask = null;
+		}
+	}
+
+	private void updateViews()
+	{
+		cancelTask();
+
+		m_populateTask = new PopulateDataTask();
+		m_populateTask.execute();
+	}
+
 	@Override
 	public void onResume()
 	{
@@ -53,16 +73,53 @@ public class LifeTimeStatsFragment extends BaseFragment
 		updateViews();
 	}
 
-	private void updateViews()
+	@Override
+	public void onPause()
 	{
-		final DateTime startToday = ReportUtils.getStartOfToday();
+		super.onPause();
+		cancelTask();
+	}
 
-		DateTime end = DateTime.now();
+	private static class Data
+	{
+		public final int m_today;
+		public final int m_yesterday;
+		public final int m_allTime;
 
-		List<Unlock> today = Unlock.getAllInRange( startToday, end );
-		List<Unlock> today_1 = Unlock.getAllInRange( ReportUtils.getStartOfYesterday(), startToday );
-		List<Unlock> allUnlocks = Unlock.getAll();
+		private Data( int today, int yesterday, int allTime )
+		{
+			m_today = today;
+			m_yesterday = yesterday;
+			m_allTime = allTime;
+		}
+	}
 
-		m_summaryView.setText( getString( R.string.life_time_summary, today.size(), today_1.size(), allUnlocks.size() ) );
+	private class PopulateDataTask extends AsyncTask<Void, Void, Data>
+	{
+		@Override
+		protected Data doInBackground( Void... params )
+		{
+			final DateTime startToday = ReportUtils.getStartOfToday();
+
+			DateTime end = DateTime.now();
+
+			List<Unlock> today = Unlock.getAllInRange( startToday, end );
+			List<Unlock> today_1 = Unlock.getAllInRange( ReportUtils.getStartOfYesterday(), startToday );
+			List<Unlock> allUnlocks = Unlock.getAll();
+
+			return new Data( today.size(), today_1.size(), allUnlocks.size() );
+		}
+
+		@Override
+		protected void onPostExecute( Data data )
+		{
+			super.onPostExecute( data );
+
+			if( isAdded() )
+			{
+				m_summaryView
+						.setText( getString( R.string.life_time_summary, data.m_today, data.m_yesterday, data.m_allTime ) );
+			}
+		}
 	}
 }

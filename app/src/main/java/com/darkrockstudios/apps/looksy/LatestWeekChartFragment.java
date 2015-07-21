@@ -159,7 +159,7 @@ public class LatestWeekChartFragment extends BaseFragment
 			super.onPreExecute();
 
 			m_progressBarView.setVisibility( View.VISIBLE );
-			m_chartView.setVisibility( View.INVISIBLE );
+			m_chartView.setVisibility( View.GONE );
 
 			m_todayStr = getString( R.string.chart_today );
 		}
@@ -216,22 +216,12 @@ public class LatestWeekChartFragment extends BaseFragment
 				}
 				else
 				{
-					m_chartView.animateY( 0 );
+					m_chartView.invalidate();
 				}
-				m_chartView.invalidate();
 
-				m_progressBarView.setVisibility( View.INVISIBLE );
+				m_progressBarView.setVisibility( View.GONE );
 				m_chartView.setVisibility( View.VISIBLE );
 			}
-		}
-	}
-
-	private static class ValueFormatter implements com.github.mikephil.charting.utils.ValueFormatter
-	{
-		@Override
-		public String getFormattedValue( float value )
-		{
-			return String.format( "%d", (long) value );
 		}
 	}
 }
