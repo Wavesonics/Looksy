@@ -18,23 +18,20 @@ import butterknife.Bind;
 /**
  * Created by Adam on 7/20/2015.
  */
-public class HomeFragment extends BaseFragment
+public class LifeTimeStatsFragment extends BaseFragment
 {
-	@Bind(R.id.test_view)
-	TextView m_testView;
+	@Bind(R.id.LIFETIME_summary)
+	TextView m_summaryView;
 
-	@Bind(R.id.chart_fragment_container)
-	ViewGroup m_fragmentContainerView;
-
-	public static HomeFragment newInstance()
+	public static LifeTimeStatsFragment newInstance()
 	{
-		return new HomeFragment();
+		return new LifeTimeStatsFragment();
 	}
 
 	@Override
 	protected int getLayoutId()
 	{
-		return R.layout.home_fragment;
+		return R.layout.lifetime_stats_fragment;
 	}
 
 	@Nullable
@@ -43,22 +40,9 @@ public class HomeFragment extends BaseFragment
 	{
 		final View view = super.onCreateView( inflater, container, savedInstanceState );
 
-		if( savedInstanceState == null )
-		{
-			getChildFragmentManager().beginTransaction()
-			                         .replace( R.id.chart_fragment_container, LatestWeekChartFragment.newInstance() ).commit();
-		}
+		updateViews();
 
 		return view;
-	}
-
-	private void updateViews()
-	{
-		final DateTime startToday = ReportUtils.getStartOfToday();
-		DateTime end = DateTime.now();
-		List<Unlock> today = Unlock.getAllInRange( startToday, end );
-
-		m_testView.setText( getString( R.string.home_summary, today.size() ) );
 	}
 
 	@Override
@@ -67,5 +51,18 @@ public class HomeFragment extends BaseFragment
 		super.onResume();
 
 		updateViews();
+	}
+
+	private void updateViews()
+	{
+		final DateTime startToday = ReportUtils.getStartOfToday();
+
+		DateTime end = DateTime.now();
+
+		List<Unlock> today = Unlock.getAllInRange( startToday, end );
+		List<Unlock> today_1 = Unlock.getAllInRange( ReportUtils.getStartOfYesterday(), startToday );
+		List<Unlock> allUnlocks = Unlock.getAll();
+
+		m_summaryView.setText( getString( R.string.life_time_summary, today.size(), today_1.size(), allUnlocks.size() ) );
 	}
 }

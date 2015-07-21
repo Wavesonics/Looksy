@@ -5,7 +5,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,16 +23,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
+import icepick.Icicle;
 
 /**
  * Created by Adam on 7/20/2015.
  */
-public class LatestWeekChartFragment extends Fragment
+public class LatestWeekChartFragment extends BaseFragment
 {
 	private static ValueFormatter s_valueFormatter = new ValueFormatter();
 
 	private PopulateChartTask m_populateChartTask;
+
+	@Icicle
+	boolean m_animatedIn;
 
 	@Bind(R.id.bar_chart)
 	BarChart m_chartView;
@@ -46,12 +48,17 @@ public class LatestWeekChartFragment extends Fragment
 		return new LatestWeekChartFragment();
 	}
 
+	@Override
+	protected int getLayoutId()
+	{
+		return R.layout.latest_week_chart_fragment;
+	}
+
 	@Nullable
 	@Override
 	public View onCreateView( LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
 	{
-		final View view = inflater.inflate( R.layout.latest_week_chart_fragment, container, false );
-		ButterKnife.bind( this, view );
+		final View view = super.onCreateView( inflater, container, savedInstanceState );
 
 		m_chartView.setDrawValuesForWholeStack( false );
 		m_chartView.setDescription( null );
@@ -138,19 +145,14 @@ public class LatestWeekChartFragment extends Fragment
 						               res.getColor( R.color.stack_morning ),
 						               res.getColor( R.color.stack_early_morning )
 				               };
-		/*
-		int stacksize = 4;
-		for( int i = 0; i < stacksize; i++ )
-		{
-			colors[ i ] = ColorTemplate.JOYFUL_COLORS[ i ];
-		}
-		*/
 
 		return colors;
 	}
 
 	private class PopulateChartTask extends AsyncTask<Void, Void, BarData>
 	{
+		private String m_todayStr;
+
 		@Override
 		protected void onPreExecute()
 		{
@@ -158,6 +160,8 @@ public class LatestWeekChartFragment extends Fragment
 
 			m_progressBarView.setVisibility( View.VISIBLE );
 			m_chartView.setVisibility( View.INVISIBLE );
+
+			m_todayStr = getString( R.string.chart_today );
 		}
 
 		@Override
@@ -177,7 +181,7 @@ public class LatestWeekChartFragment extends Fragment
 					addEntriesForDay( ii, day, dataEntry );
 					if( day == 0 )
 					{
-						xVals.add( getString( R.string.chart_today ) );
+						xVals.add( m_todayStr );
 					}
 					else
 					{
@@ -205,6 +209,15 @@ public class LatestWeekChartFragment extends Fragment
 			if( isAdded() )
 			{
 				m_chartView.setData( barData );
+				if( !m_animatedIn )
+				{
+					m_chartView.animateY( 250 );
+					m_animatedIn = true;
+				}
+				else
+				{
+					m_chartView.animateY( 0 );
+				}
 				m_chartView.invalidate();
 
 				m_progressBarView.setVisibility( View.INVISIBLE );

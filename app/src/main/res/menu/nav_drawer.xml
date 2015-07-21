@@ -8,5 +8,12 @@
         <item
             android:id="@+id/navigation_item_daily"
             android:title="@string/nav_item_daily"/>
+        <item
+            android:id="@+id/navigation_item_lifetime"
+            android:title="@string/nav_item_lifetime"/>
     </group>
+
+    <item
+        android:id="@+id/navigation_item_settings"
+        android:title="@string/nav_item_settings"/>
 </menu>

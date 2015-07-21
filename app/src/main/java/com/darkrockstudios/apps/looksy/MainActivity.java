@@ -100,6 +100,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 				getSupportFragmentManager().beginTransaction()
 				                           .replace( R.id.content_container, DailyStatsFragment.newInstance() ).commit();
 				break;
+			case R.id.navigation_item_lifetime:
+				getSupportFragmentManager().beginTransaction()
+				                           .replace( R.id.content_container, LifeTimeStatsFragment.newInstance() ).commit();
+				break;
+			case R.id.navigation_item_settings:
+				startActivity( new Intent( this, SettingsActivity.class ) );
+				break;
 		}
 	}
 
@@ -128,8 +135,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	@Override
 	public boolean onCreateOptionsMenu( Menu menu )
 	{
-		getMenuInflater().inflate( R.menu.menu_main, menu );
-		return true;
+		//getMenuInflater().inflate( R.menu.menu_main, menu );
+		return false;
 	}
 
 	@Override
@@ -138,12 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		final boolean handled;
 
 		final int id = item.getItemId();
-		if( id == R.id.action_settings )
-		{
-			startActivity( new Intent( this, SettingsActivity.class ) );
-			handled = true;
-		}
-		else if( m_drawerToggle.onOptionsItemSelected( item ) )
+		if( m_drawerToggle.onOptionsItemSelected( item ) )
 		{
 			handled = true;
 		}
