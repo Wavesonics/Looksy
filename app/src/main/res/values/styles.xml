@@ -7,6 +7,7 @@
         <item name="colorAccent">@color/accent</item>
 
         <item name="actionBarStyle">@style/Looksy.ActionBar</item>
+        <item name="drawerArrowStyle">@style/Looksy.DrawerArrowToggle</item>
     </style>
 
     <style name="Looksy.ActionBar" parent="@style/Widget.AppCompat.Light.ActionBar">
@@ -15,6 +16,10 @@
 
     <style name="Looksy.ActionBar.Text" parent="@android:style/TextAppearance.Medium">
         <item name="android:textColor">#ffffff</item>
+    </style>
+
+    <style name="Looksy.DrawerArrowToggle" parent="Widget.AppCompat.DrawerArrowToggle">
+        <item name="color">#ffffffff</item>
     </style>
 
 </resources>
