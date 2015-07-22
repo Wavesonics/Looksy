@@ -7,8 +7,8 @@ android {
         applicationId "com.darkrockstudios.apps.looksy"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 3
-        versionName "0.03"
+        versionCode 4
+        versionName "0.04"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
@@ -49,6 +49,8 @@ android {
     }
     packagingOptions {
         exclude 'META-INF/services/javax.annotation.processing.Processor'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
     }
 }
 
@@ -74,4 +76,7 @@ dependencies {
     compile 'com.f2prateek.dart:dart:1.1.0'
     compile 'frankiesardo:icepick:3.0.2'
     provided 'frankiesardo:icepick-processor:3.0.2'
+
+    compile 'commons-io:commons-io:2.4'
+    compile 'com.jakewharton:process-phoenix:1.0.0'
 }

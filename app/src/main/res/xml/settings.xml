@@ -17,5 +17,6 @@
     <PreferenceCategory
         android:title="Debug">
         <com.darkrockstudios.apps.looksy.settings.DebugInsertDataPreference/>
+        <com.darkrockstudios.apps.looksy.settings.DebugSwapDatabasesPreference/>
     </PreferenceCategory>
 </PreferenceScreen>

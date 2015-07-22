@@ -43,6 +43,8 @@ public class LatestWeekChartFragment extends BaseFragment
 	@Bind(R.id.progressBar)
 	ProgressBar m_progressBarView;
 
+	private int[] m_color;
+
 	public static LatestWeekChartFragment newInstance()
 	{
 		return new LatestWeekChartFragment();
@@ -52,6 +54,21 @@ public class LatestWeekChartFragment extends BaseFragment
 	protected int getLayoutId()
 	{
 		return R.layout.latest_week_chart_fragment;
+	}
+
+	@Override
+	public void onCreate( @Nullable Bundle savedInstanceState )
+	{
+		super.onCreate( savedInstanceState );
+
+		Resources res = getResources();
+		m_color = new int[]
+				          {
+						          res.getColor( R.color.stack_evening ),
+						          res.getColor( R.color.stack_afternoon ),
+						          res.getColor( R.color.stack_morning ),
+						          res.getColor( R.color.stack_early_morning )
+				          };
 	}
 
 	@Nullable
@@ -106,6 +123,7 @@ public class LatestWeekChartFragment extends BaseFragment
 		DateTime eighteenHoursIn = startOfDay.plusHours( 18 );
 		DateTime endOfDay = startOfDay.plusDays( 1 );
 
+
 		float values[] = new float[]
 				                 {
 						                 Unlock.getAllInRange( eighteenHoursIn, endOfDay ).size(),
@@ -133,25 +151,10 @@ public class LatestWeekChartFragment extends BaseFragment
 		return labels;
 	}
 
-	private int[] getColors()
-	{
-		Resources res = getResources();
-
-		// have as many colors as stack-values per entry
-		int[] colors = new int[]
-				               {
-						               res.getColor( R.color.stack_evening ),
-						               res.getColor( R.color.stack_afternoon ),
-						               res.getColor( R.color.stack_morning ),
-						               res.getColor( R.color.stack_early_morning )
-				               };
-
-		return colors;
-	}
-
 	private class PopulateChartTask extends AsyncTask<Void, Void, BarData>
 	{
 		private String m_todayStr;
+		private String[] m_stackLabels;
 
 		@Override
 		protected void onPreExecute()
@@ -162,6 +165,7 @@ public class LatestWeekChartFragment extends BaseFragment
 			m_chartView.setVisibility( View.GONE );
 
 			m_todayStr = getString( R.string.chart_today );
+			m_stackLabels = getStackLabels();
 		}
 
 		@Override
@@ -191,8 +195,8 @@ public class LatestWeekChartFragment extends BaseFragment
 
 				List<BarDataSet> dataSets = new ArrayList<>();
 				BarDataSet set = new BarDataSet( dataEntry, null );
-				set.setColors( getColors() );
-				set.setStackLabels( getStackLabels() );
+				set.setColors( m_color );
+				set.setStackLabels( m_stackLabels );
 				set.setValueFormatter( s_valueFormatter );
 				dataSets.add( set );
 

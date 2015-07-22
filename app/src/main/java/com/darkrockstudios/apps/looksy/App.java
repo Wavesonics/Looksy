@@ -25,12 +25,15 @@ public class App extends Application
 	public static final String EXTERNAL_APP_DIR = "Looksy";
 	public static final String DATABASE_DIR     = "databases";
 
+	private DatabaseContext m_databaseContext;
+
 	@Override
 	public void onCreate()
 	{
 		super.onCreate();
 
-		ActiveAndroid.initialize( new DatabaseContext( this ) );
+		m_databaseContext = new DatabaseContext( this );
+		ActiveAndroid.initialize( m_databaseContext );
 		PreferenceManager.setDefaultValues( this, R.xml.settings, false );
 
 		// Make sure we have a report scheduled
@@ -44,6 +47,11 @@ public class App extends Application
 		ActiveAndroid.dispose();
 	}
 
+	public File getLooksyDatabaseFile()
+	{
+		return m_databaseContext.getApplicationDatabaseFile();
+	}
+
 	/**
 	 * Context wrapper to trick ActiveAndroid into writing it's database
 	 * into public storage. We want a much more durable database than private
@@ -52,9 +60,16 @@ public class App extends Application
 	 */
 	private static class DatabaseContext extends ContextWrapper
 	{
+		private File m_databaseFile;
+
 		public DatabaseContext( Context base )
 		{
 			super( base );
+		}
+
+		public File getApplicationDatabaseFile()
+		{
+			return m_databaseFile;
 		}
 
 		public File getStoragePath()
@@ -92,8 +107,8 @@ public class App extends Application
 					Log.e( TAG, "Failed to create database directory" );
 				}
 			}
-			final File databasePath = getDatabasePath( name );
-			return SQLiteDatabase.openOrCreateDatabase( databasePath.getAbsolutePath(), factory, errorHandler );
+			m_databaseFile = getDatabasePath( name );
+			return SQLiteDatabase.openOrCreateDatabase( m_databaseFile.getAbsolutePath(), factory, errorHandler );
 		}
 	}
 }
