@@ -61,8 +61,8 @@ public class ReportService extends IntentService
 		final int looksYesterday = getUnlocksYesterday();
 
 		Notification notification = new Notification.Builder( this )
-				                 .setContentTitle( getString( R.string.report_title, looksYesterday ) )
-				                 .setContentText( getString( R.string.report_text, looksYesterday ) )
+				                            .setContentTitle( getString( R.string.notification_report_title ) )
+				                            .setContentText( getString( R.string.notification_report_text, looksYesterday ) )
 				                 .setSmallIcon( R.drawable.ic_app )
 				                 .setContentIntent( pendingIntent )
 				                 .setAutoCancel( true ).build();

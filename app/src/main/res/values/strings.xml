@@ -26,8 +26,8 @@
 
     <string name="chart_today">Today</string>
 
-    <string name="report_title">%1$d looks yesterday</string>
-    <string name="report_text">You checked your device %1$d yesterday</string>
+    <string name="notification_report_title">Yesterday\'s Looksy Report</string>
+    <string name="notification_report_text">You checked your device %1$d times yesterday</string>
 
     <string name="settings_reports_category_title">Daily Reports</string>
     <string name="settings_reports_enable_title">Display reports</string>

@@ -6,12 +6,15 @@
         <item
             android:id="@+id/navigation_item_home"
             android:checked="true"
+            android:icon="@drawable/ic_nav_home"
             android:title="@string/nav_item_home"/>
         <item
             android:id="@+id/navigation_item_daily"
+            android:icon="@drawable/ic_nav_daily"
             android:title="@string/nav_item_daily"/>
         <item
             android:id="@+id/navigation_item_lifetime"
+            android:icon="@drawable/ic_nav_lifetime"
             android:title="@string/nav_item_lifetime"/>
     </group>
 

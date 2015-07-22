@@ -58,6 +58,7 @@ public class DailyStatsFragment extends BaseFragment
 	{
 		final View view = super.onCreateView( inflater, container, savedInstanceState );
 
+		m_pieChart.setUsePercentValues( true );
 		m_pieChart.setHighlightEnabled( false );
 		m_pieChart.setDescription( getString( R.string.daily_chart_description ) );
 
@@ -121,16 +122,18 @@ public class DailyStatsFragment extends BaseFragment
 		protected PieData doInBackground( Void... params )
 		{
 			List<Entry> data = new ArrayList<>( 7 );
-			data.add( new Entry( unlocksOnDayOfWeek( DateTimeConstants.MONDAY ), 0 ) );
-			data.add( new Entry( unlocksOnDayOfWeek( DateTimeConstants.TUESDAY ), 0 ) );
-			data.add( new Entry( unlocksOnDayOfWeek( DateTimeConstants.WEDNESDAY ), 0 ) );
-			data.add( new Entry( unlocksOnDayOfWeek( DateTimeConstants.THURSDAY ), 0 ) );
-			data.add( new Entry( unlocksOnDayOfWeek( DateTimeConstants.FRIDAY ), 0 ) );
-			data.add( new Entry( unlocksOnDayOfWeek( DateTimeConstants.SATURDAY ), 0 ) );
-			data.add( new Entry( unlocksOnDayOfWeek( DateTimeConstants.SUNDAY ), 0 ) );
+			for( int ii = DateTimeConstants.MONDAY; ii <= DateTimeConstants.SUNDAY; ++ii )
+			{
+				final int unlocks = unlocksOnDayOfWeek( ii );
+				if( unlocks > 0 )
+				{
+					data.add( new Entry( unlocks, 0 ) );
+				}
+			}
+
 			PieDataSet dataSet = new PieDataSet( data, m_description );
 			dataSet.setColors( getColors() );
-			dataSet.setValueFormatter( new ValueFormatter() );
+			dataSet.setValueFormatter( new PercentValueFormatter() );
 
 			LocalDate date = new LocalDate();
 			String[] xVals = new String[]
