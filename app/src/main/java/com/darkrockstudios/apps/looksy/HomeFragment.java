@@ -12,8 +12,6 @@ import com.darkrockstudios.apps.looksy.data.Unlock;
 
 import org.joda.time.DateTime;
 
-import java.util.List;
-
 import butterknife.Bind;
 
 /**
@@ -94,9 +92,9 @@ public class HomeFragment extends BaseFragment
 		{
 			final DateTime startToday = ReportUtils.getStartOfToday();
 			DateTime end = DateTime.now();
-			List<Unlock> today = Unlock.getAllInRange( startToday, end );
+			int today = Unlock.countAllInRange( startToday, end );
 
-			return today.size();
+			return today;
 		}
 
 		@Override

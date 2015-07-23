@@ -56,11 +56,28 @@ public class Unlock extends Model
 				       .execute();
 	}
 
+	public static int countAllInRange( @NonNull final DateTime start, @NonNull final DateTime end )
+	{
+		return new Select()
+				       .from( Unlock.class )
+				       .where( "Timestamp > ? AND Timestamp < ?", start.getMillis(), end.getMillis() )
+				       .orderBy( "Timestamp ASC" )
+				       .count();
+	}
+
 	public static List<Unlock> getAll()
 	{
 		return new Select()
 				       .from( Unlock.class )
 				       .orderBy( "Timestamp ASC" )
 				       .execute();
+	}
+
+	public static int countAll()
+	{
+		return new Select()
+				       .from( Unlock.class )
+				       .orderBy( "Timestamp ASC" )
+				       .count();
 	}
 }

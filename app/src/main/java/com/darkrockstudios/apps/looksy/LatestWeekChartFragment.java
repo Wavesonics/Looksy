@@ -126,10 +126,10 @@ public class LatestWeekChartFragment extends BaseFragment
 
 		float values[] = new float[]
 				                 {
-						                 Unlock.getAllInRange( eighteenHoursIn, endOfDay ).size(),
-						                 Unlock.getAllInRange( twelveHoursIn, eighteenHoursIn ).size(),
-						                 Unlock.getAllInRange( sixHoursIn, twelveHoursIn ).size(),
-						                 Unlock.getAllInRange( startOfDay, sixHoursIn ).size()
+						                 Unlock.countAllInRange( eighteenHoursIn, endOfDay ),
+						                 Unlock.countAllInRange( twelveHoursIn, eighteenHoursIn ),
+						                 Unlock.countAllInRange( sixHoursIn, twelveHoursIn ),
+						                 Unlock.countAllInRange( startOfDay, sixHoursIn )
 
 				                 };
 

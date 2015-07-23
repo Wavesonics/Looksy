@@ -20,8 +20,6 @@ import com.darkrockstudios.apps.looksy.settings.PreferenceKey;
 import org.joda.time.DateTime;
 import org.joda.time.LocalTime;
 
-import java.util.List;
-
 public class ReportService extends IntentService
 {
 	public static final String TAG = ReportService.class.getSimpleName();
@@ -44,10 +42,10 @@ public class ReportService extends IntentService
 	private int getUnlocksYesterday()
 	{
 		final DateTime startToday = ReportUtils.getStartOfToday();
-		DateTime end = DateTime.now();
-		List<Unlock> today = Unlock.getAllInRange( startToday, end );
+		final DateTime startYesterday = ReportUtils.getStartOfYesterday();
+		final int today = Unlock.countAllInRange( startYesterday, startToday );
 
-		return today.size();
+		return today;
 	}
 
 	private void postReportNotification()
