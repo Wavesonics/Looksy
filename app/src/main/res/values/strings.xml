@@ -24,10 +24,18 @@
     <string name="stack_label_3">afternoon</string>
     <string name="stack_label_4">evening</string>
 
+    <string-array name="time_of_day">
+        <item>early morning</item>
+        <item>morning</item>
+        <item>afternoon</item>
+        <item>evening</item>
+    </string-array>
+
     <string name="chart_today">Today</string>
 
     <string name="notification_report_title">Yesterday\'s Looksy Report</string>
     <string name="notification_report_text">You checked your device %1$d times yesterday</string>
+    <string name="notification_report_full">You checked your device %1$d times yesterday\nYou checked most often in the %2$s</string>
 
     <string name="settings_reports_category_title">Daily Reports</string>
     <string name="settings_reports_enable_title">Display reports</string>

@@ -10,14 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ProgressBar;
 
-import com.darkrockstudios.apps.looksy.data.Unlock;
+import com.darkrockstudios.apps.looksy.data.StatsForDay;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-
-import org.joda.time.DateTime;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -117,20 +115,14 @@ public class LatestWeekChartFragment extends BaseFragment
 
 	private void addEntriesForDay( final int day, final int index, @NonNull final List<BarEntry> dataEntry )
 	{
-		DateTime startOfDay = ReportUtils.getStartOfDay( day );
-		DateTime sixHoursIn = startOfDay.plusHours( 6 );
-		DateTime twelveHoursIn = startOfDay.plusHours( 12 );
-		DateTime eighteenHoursIn = startOfDay.plusHours( 18 );
-		DateTime endOfDay = startOfDay.plusDays( 1 );
-
+		final StatsForDay statsForDay = new StatsForDay( ReportUtils.getStartOfDay( day ) );
 
 		float values[] = new float[]
 				                 {
-						                 Unlock.countAllInRange( eighteenHoursIn, endOfDay ),
-						                 Unlock.countAllInRange( twelveHoursIn, eighteenHoursIn ),
-						                 Unlock.countAllInRange( sixHoursIn, twelveHoursIn ),
-						                 Unlock.countAllInRange( startOfDay, sixHoursIn )
-
+						                 statsForDay.m_earlyMorning,
+						                 statsForDay.m_morning,
+						                 statsForDay.m_afterNoon,
+						                 statsForDay.m_evening
 				                 };
 
 		BarEntry barEntry = new BarEntry( values, index );

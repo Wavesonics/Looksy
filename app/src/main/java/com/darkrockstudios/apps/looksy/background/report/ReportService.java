@@ -8,13 +8,16 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Resources;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.darkrockstudios.apps.looksy.MainActivity;
 import com.darkrockstudios.apps.looksy.R;
 import com.darkrockstudios.apps.looksy.ReportUtils;
-import com.darkrockstudios.apps.looksy.data.Unlock;
+import com.darkrockstudios.apps.looksy.data.StatsForDay;
 import com.darkrockstudios.apps.looksy.settings.PreferenceKey;
 
 import org.joda.time.DateTime;
@@ -39,13 +42,46 @@ public class ReportService extends IntentService
 		ReportAlarmReceiver.completeWakefulIntent( intent );
 	}
 
-	private int getUnlocksYesterday()
+	private StatsForDay getUnlocksYesterday()
 	{
-		final DateTime startToday = ReportUtils.getStartOfToday();
-		final DateTime startYesterday = ReportUtils.getStartOfYesterday();
-		final int today = Unlock.countAllInRange( startYesterday, startToday );
+		final StatsForDay statsForDay = new StatsForDay( ReportUtils.getStartOfYesterday() );
 
-		return today;
+		return statsForDay;
+	}
+
+	private String getReportText( @NonNull final StatsForDay statsForDay )
+	{
+		Resources res = getResources();
+		String[] timesofDay = res.getStringArray( R.array.time_of_day );
+
+		final String timeOfDay;
+
+		if( isLargest( statsForDay.m_evening, statsForDay ) )
+		{
+			timeOfDay = timesofDay[ 3 ];
+		}
+		else if( isLargest( statsForDay.m_afterNoon, statsForDay ) )
+		{
+			timeOfDay = timesofDay[ 2 ];
+		}
+		else if( isLargest( statsForDay.m_morning, statsForDay ) )
+		{
+			timeOfDay = timesofDay[ 1 ];
+		}
+		else
+		{
+			timeOfDay = timesofDay[ 0 ];
+		}
+
+		return getString( R.string.notification_report_full, statsForDay.getTotal(), timeOfDay );
+	}
+
+	private boolean isLargest( final int statToCheck, @NonNull final StatsForDay statsForDay )
+	{
+		return statsForDay.m_earlyMorning >= statToCheck
+		       && statsForDay.m_morning >= statToCheck
+		       && statsForDay.m_afterNoon >= statToCheck
+		       && statsForDay.m_evening >= statToCheck;
 	}
 
 	private void postReportNotification()
@@ -56,14 +92,19 @@ public class ReportService extends IntentService
 		Intent intent = new Intent( this, MainActivity.class );
 		PendingIntent pendingIntent = PendingIntent.getActivity( this, 0, intent, 0 );
 
-		final int looksYesterday = getUnlocksYesterday();
+		final StatsForDay looksYesterday = getUnlocksYesterday();
+		String report = getReportText( looksYesterday );
 
-		Notification notification = new Notification.Builder( this )
+		Notification notification = new NotificationCompat.Builder( this )
 				                            .setContentTitle( getString( R.string.notification_report_title ) )
-				                            .setContentText( getString( R.string.notification_report_text, looksYesterday ) )
-				                 .setSmallIcon( R.drawable.ic_app )
-				                 .setContentIntent( pendingIntent )
-				                 .setAutoCancel( true ).build();
+				                            .setContentText( getString( R.string.notification_report_text,
+				                                                        looksYesterday.getTotal() ) )
+				                            .setSmallIcon( R.drawable.ic_app )
+				                            .setContentIntent( pendingIntent )
+				                            .setAutoCancel( true )
+				                            .setStyle( new NotificationCompat.BigTextStyle()
+						                                       .bigText( report ) )
+				                            .build();
 
 		notificationManager.notify( NOTIFICATION_ID_REPORT, notification );
 	}
@@ -86,7 +127,7 @@ public class ReportService extends IntentService
 
 			final DateTime reportTime;
 			DateTime reportTimeToday = today.withHourOfDay( reportTimeOfDay.getHourOfDay() ).withMinuteOfHour( reportTimeOfDay
-					                                                                                                         .getMinuteOfHour() );
+					                                                                                                   .getMinuteOfHour() );
 			if( reportTimeToday.isAfterNow() )
 			{
 				reportTime = reportTimeToday;
@@ -96,7 +137,7 @@ public class ReportService extends IntentService
 			{
 				DateTime tomorrow = ReportUtils.getStartOfTomorrow();
 				reportTime = tomorrow.withHourOfDay( reportTimeOfDay.getHourOfDay() ).withMinuteOfHour( reportTimeOfDay
-						                                                                           .getMinuteOfHour() );
+						                                                                                        .getMinuteOfHour() );
 				Log.i( TAG, "Scheduling a report for tomorrow: " + reportTime );
 			}
 
