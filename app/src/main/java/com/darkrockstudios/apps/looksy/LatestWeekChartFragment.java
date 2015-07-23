@@ -75,7 +75,7 @@ public class LatestWeekChartFragment extends BaseFragment
 	{
 		final View view = super.onCreateView( inflater, container, savedInstanceState );
 
-		m_chartView.setDrawValuesForWholeStack( false );
+		//m_chartView.setDrawValuesForWholeStack( true );
 		m_chartView.setDescription( null );
 		m_chartView.getAxisRight().setDrawLabels( false );
 		m_chartView.setPinchZoom( false );

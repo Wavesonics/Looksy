@@ -78,10 +78,10 @@ public class ReportService extends IntentService
 
 	private boolean isLargest( final int statToCheck, @NonNull final StatsForDay statsForDay )
 	{
-		return statsForDay.m_earlyMorning >= statToCheck
-		       && statsForDay.m_morning >= statToCheck
-		       && statsForDay.m_afterNoon >= statToCheck
-		       && statsForDay.m_evening >= statToCheck;
+		return statsForDay.m_earlyMorning <= statToCheck
+		       && statsForDay.m_morning <= statToCheck
+		       && statsForDay.m_afterNoon <= statToCheck
+		       && statsForDay.m_evening <= statToCheck;
 	}
 
 	private void postReportNotification()
