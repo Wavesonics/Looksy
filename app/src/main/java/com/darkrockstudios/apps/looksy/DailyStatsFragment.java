@@ -122,12 +122,15 @@ public class DailyStatsFragment extends BaseFragment
 		protected PieData doInBackground( Void... params )
 		{
 			List<Entry> data = new ArrayList<>( 7 );
+			List<String> dayOfWeek = new ArrayList<>( 7 );
+			LocalDate date = new LocalDate();
 			for( int ii = DateTimeConstants.MONDAY; ii <= DateTimeConstants.SUNDAY; ++ii )
 			{
 				final int unlocks = unlocksOnDayOfWeek( ii );
 				if( unlocks > 0 )
 				{
 					data.add( new Entry( unlocks, 0 ) );
+					dayOfWeek.add( date.withDayOfWeek( ii ).dayOfWeek().getAsText() );
 				}
 			}
 
@@ -135,17 +138,8 @@ public class DailyStatsFragment extends BaseFragment
 			dataSet.setColors( getColors() );
 			dataSet.setValueFormatter( new PercentValueFormatter() );
 
-			LocalDate date = new LocalDate();
-			String[] xVals = new String[]
-					                 {
-							                 date.withDayOfWeek( 1 ).dayOfWeek().getAsText(),
-							                 date.withDayOfWeek( 2 ).dayOfWeek().getAsText(),
-							                 date.withDayOfWeek( 3 ).dayOfWeek().getAsText(),
-							                 date.withDayOfWeek( 4 ).dayOfWeek().getAsText(),
-							                 date.withDayOfWeek( 5 ).dayOfWeek().getAsText(),
-							                 date.withDayOfWeek( 6 ).dayOfWeek().getAsText(),
-							                 date.withDayOfWeek( 7 ).dayOfWeek().getAsText()
-					                 };
+			String[] xVals = new String[ dayOfWeek.size() ];
+			dayOfWeek.toArray( xVals );
 
 			PieData pieData = new PieData( xVals, dataSet );
 
