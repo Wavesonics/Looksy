@@ -45,4 +45,7 @@
 
     <string name="time_preference_positive">Set</string>
     <string name="time_preference_negative">Cancel</string>
+
+    <string name="nav_header_title">Tap here to see yesterdays detailed report</string>
+    <string name="nav_header_total_title">Total looks yesterday:</string>
 </resources>

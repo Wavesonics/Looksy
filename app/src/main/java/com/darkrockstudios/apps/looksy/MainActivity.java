@@ -3,6 +3,7 @@ package com.darkrockstudios.apps.looksy;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.NavigationView;
@@ -11,11 +12,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.TextView;
 
+import com.darkrockstudios.apps.looksy.data.Unlock;
 import com.darkrockstudios.apps.looksy.settings.SettingsActivity;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
@@ -27,8 +31,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	@Bind(R.id.navigation)
 	NavigationView m_navigationView;
 
+	@Bind(R.id.DRAWER_report_header_total)
+	TextView m_lastDayReportTotalView;
+
+	@Bind(R.id.DRAWER_report_container)
+	View m_reportContainerView;
+
+	@Bind(R.id.DRAWER_report_progress_bar)
+	View m_reportProgressBar;
+
 	private Handler                     m_uiHandler;
 	private LooksyActionBarDrawerToggle m_drawerToggle;
+	private PopulateDataTask m_populateTask;
 
 	@Override
 	protected void onCreate( Bundle savedInstanceState )
@@ -52,6 +66,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			getSupportFragmentManager().beginTransaction()
 			                           .replace( R.id.content_container, HomeFragment.newInstance() ).commit();
 		}
+	}
+
+	private void updateViews()
+	{
+		cancelTask();
+
+		m_populateTask = new PopulateDataTask();
+		m_populateTask.execute();
+	}
+
+	private void cancelTask()
+	{
+		if( m_populateTask != null )
+		{
+			m_populateTask.cancel( true );
+			m_populateTask = null;
+		}
+	}
+
+	@Override
+	protected void onResume()
+	{
+		super.onResume();
+		updateViews();
+	}
+
+	@Override
+	public void onPause()
+	{
+		super.onPause();
+		cancelTask();
 	}
 
 	@Override
@@ -155,5 +200,50 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		}
 
 		return handled;
+	}
+
+	@OnClick(R.id.DRAWER_report_container)
+	public void onHeaderClick()
+	{
+		m_uiHandler.postDelayed( new Runnable()
+		{
+			@Override
+			public void run()
+			{
+				getSupportFragmentManager().beginTransaction()
+				                           .replace( R.id.content_container, DailyReportFragment.newInstance() ).commit();
+			}
+		}, DRAWER_CLOSE_DELAY_MS );
+
+		m_drawerLayout.closeDrawers();
+	}
+
+	private class PopulateDataTask extends AsyncTask<Void, Void, Integer>
+	{
+		@Override
+		protected void onPreExecute()
+		{
+			super.onPreExecute();
+
+			m_reportProgressBar.setVisibility( View.VISIBLE );
+			m_reportContainerView.setVisibility( View.GONE );
+		}
+
+		@Override
+		protected Integer doInBackground( Void... params )
+		{
+			return Unlock.countAllInRange( ReportUtils.getStartOfYesterday(), ReportUtils.getStartOfToday() );
+		}
+
+		@Override
+		protected void onPostExecute( Integer totalLooks )
+		{
+			super.onPostExecute( totalLooks );
+
+			m_lastDayReportTotalView.setText( String.valueOf( totalLooks ) );
+
+			m_reportProgressBar.setVisibility( View.GONE );
+			m_reportContainerView.setVisibility( View.VISIBLE );
+		}
 	}
 }

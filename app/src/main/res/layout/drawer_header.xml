@@ -1,13 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/DRAWER_report_header"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="250dp"
-              android:background="@color/stack_early_morning">
 
-    <TextView
-        android:id="@+id/DRAWER_report_header_total"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:id="@+id/DRAWER_report_header"
+             android:orientation="vertical"
+             android:layout_width="match_parent"
+             android:layout_height="250dp"
+             android:background="@color/stack_early_morning">
+
+    <RelativeLayout
+        android:id="@+id/DRAWER_report_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="@dimen/default_padding"
+        android:background="@drawable/interaction_background">
+
+        <TextView
+            android:id="@+id/DRAWER_report_header_total_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/DRAWER_report_header_total"
+            android:textAppearance="?android:attr/textAppearanceLargeInverse"
+            android:text="@string/nav_header_total_title"/>
+
+        <TextView
+            android:id="@+id/DRAWER_report_header_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textAppearance="?android:attr/textAppearanceLargeInverse"
+            android:textSize="42sp"
+            tools:text="42"/>
+
+        <TextView
+            android:id="@+id/DRAWER_report_header_instructions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:textAppearance="?android:attr/textAppearanceSmallInverse"
+            android:text="@string/nav_header_title"/>
+    </RelativeLayout>
+
+    <ProgressBar
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
-</LinearLayout>
+        android:layout_height="wrap_content"
+        android:id="@+id/DRAWER_report_progress_bar"
+        android:indeterminate="true"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+
+</FrameLayout>
