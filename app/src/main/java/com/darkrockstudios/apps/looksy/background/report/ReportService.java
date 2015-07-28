@@ -8,6 +8,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
@@ -58,24 +60,28 @@ public class ReportService extends IntentService
 	private void postReportNotification()
 	{
 		NotificationManager notificationManager = (NotificationManager)
-				                                          getSystemService( NOTIFICATION_SERVICE );
+														  getSystemService( NOTIFICATION_SERVICE );
 
 		Intent intent = new Intent( this, MainActivity.class );
+		intent.putExtra( MainActivity.EXTRA_NAVIGATE_TO, MainActivity.InitialLocation.DailyReport );
 		PendingIntent pendingIntent = PendingIntent.getActivity( this, 0, intent, 0 );
 
 		final StatsForDay looksYesterday = getUnlocksYesterday();
 		String report = getReportText( looksYesterday );
 
+		Bitmap largeIcon = BitmapFactory.decodeResource( getResources(), R.drawable.ic_app );
+
 		Notification notification = new NotificationCompat.Builder( this )
-				                            .setContentTitle( getString( R.string.notification_report_title ) )
-				                            .setContentText( getString( R.string.notification_report_text,
-				                                                        looksYesterday.getTotal() ) )
-				                            .setSmallIcon( R.drawable.ic_app )
-				                            .setContentIntent( pendingIntent )
-				                            .setAutoCancel( true )
-				                            .setStyle( new NotificationCompat.BigTextStyle()
-						                                       .bigText( report ) )
-				                            .build();
+											.setContentTitle( getString( R.string.notification_report_title ) )
+											.setContentText( getString( R.string.notification_report_text,
+																		looksYesterday.getTotal() ) )
+											.setSmallIcon( R.drawable.ic_daily_report )
+											.setLargeIcon( largeIcon )
+											.setContentIntent( pendingIntent )
+											.setAutoCancel( true )
+											.setStyle( new NotificationCompat.BigTextStyle()
+															   .bigText( report ) )
+											.build();
 
 		notificationManager.notify( NOTIFICATION_ID_REPORT, notification );
 	}
@@ -98,7 +104,7 @@ public class ReportService extends IntentService
 
 			final DateTime reportTime;
 			DateTime reportTimeToday = today.withHourOfDay( reportTimeOfDay.getHourOfDay() ).withMinuteOfHour( reportTimeOfDay
-					                                                                                                   .getMinuteOfHour() );
+																													   .getMinuteOfHour() );
 			if( reportTimeToday.isAfterNow() )
 			{
 				reportTime = reportTimeToday;
@@ -108,7 +114,7 @@ public class ReportService extends IntentService
 			{
 				DateTime tomorrow = ReportUtils.getStartOfTomorrow();
 				reportTime = tomorrow.withHourOfDay( reportTimeOfDay.getHourOfDay() ).withMinuteOfHour( reportTimeOfDay
-						                                                                                        .getMinuteOfHour() );
+																												.getMinuteOfHour() );
 				Log.i( TAG, "Scheduling a report for tomorrow: " + reportTime );
 			}
 

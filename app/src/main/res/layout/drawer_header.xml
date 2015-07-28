@@ -5,7 +5,7 @@
              android:id="@+id/DRAWER_report_header"
              android:orientation="vertical"
              android:layout_width="match_parent"
-             android:layout_height="250dp"
+			 android:layout_height="200dp"
              android:background="@color/stack_early_morning">
 
     <RelativeLayout

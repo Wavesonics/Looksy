@@ -6,7 +6,9 @@ import android.content.res.Configuration;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -16,14 +18,30 @@ import android.widget.TextView;
 
 import com.darkrockstudios.apps.looksy.data.Unlock;
 import com.darkrockstudios.apps.looksy.settings.SettingsActivity;
+import com.f2prateek.dart.Dart;
+import com.f2prateek.dart.InjectExtra;
+import com.f2prateek.dart.Optional;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import icepick.Icepick;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
 {
 	private static final long DRAWER_CLOSE_DELAY_MS = 250;
+
+	public static final String EXTRA_NAVIGATE_TO = "com.darkrockstudios.apps.looksy.NAVIGATE_TO";
+
+	public enum InitialLocation
+	{
+		Home,
+		DailyReport
+	}
+
+	@Optional
+	@InjectExtra(EXTRA_NAVIGATE_TO)
+	InitialLocation m_initialLocation;
 
 	@Bind(R.id.nav_drawer)
 	DrawerLayout m_drawerLayout;
@@ -49,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	{
 		super.onCreate( savedInstanceState );
 		setContentView( R.layout.activity_main );
+		Dart.inject( this );
 		ButterKnife.bind( this );
 
 		m_uiHandler = new Handler();
@@ -64,8 +83,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		if( savedInstanceState == null )
 		{
 			getSupportFragmentManager().beginTransaction()
-			                           .replace( R.id.content_container, HomeFragment.newInstance() ).commit();
+									   .replace( R.id.content_container, getInitialFragment() ).commit();
 		}
+	}
+
+	private Fragment getInitialFragment()
+	{
+		final Fragment fragment;
+
+		if( m_initialLocation == null )
+		{
+			m_initialLocation = InitialLocation.Home;
+		}
+
+		switch( m_initialLocation )
+		{
+			case Home:
+				fragment = HomeFragment.newInstance();
+				break;
+			case DailyReport:
+				fragment = DailyReportFragment.newInstance();
+				break;
+			default:
+				throw new IllegalStateException( "No initial location set" );
+		}
+
+		return fragment;
 	}
 
 	private void updateViews()
@@ -97,6 +140,20 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	{
 		super.onPause();
 		cancelTask();
+	}
+
+	@Override
+	protected void onSaveInstanceState( Bundle outState )
+	{
+		super.onSaveInstanceState( outState );
+		Icepick.saveInstanceState( this, outState );
+	}
+
+	@Override
+	protected void onRestoreInstanceState( @NonNull Bundle savedInstanceState )
+	{
+		super.onRestoreInstanceState( savedInstanceState );
+		Icepick.restoreInstanceState( this, savedInstanceState );
 	}
 
 	@Override
@@ -139,15 +196,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		{
 			case R.id.navigation_item_home:
 				getSupportFragmentManager().beginTransaction()
-				                           .replace( R.id.content_container, HomeFragment.newInstance() ).commit();
+										   .replace( R.id.content_container, HomeFragment.newInstance() ).commit();
 				break;
 			case R.id.navigation_item_daily:
 				getSupportFragmentManager().beginTransaction()
-				                           .replace( R.id.content_container, DailyStatsFragment.newInstance() ).commit();
+										   .replace( R.id.content_container, DailyStatsFragment.newInstance() ).commit();
 				break;
 			case R.id.navigation_item_lifetime:
 				getSupportFragmentManager().beginTransaction()
-				                           .replace( R.id.content_container, LifeTimeStatsFragment.newInstance() ).commit();
+										   .replace( R.id.content_container, LifeTimeStatsFragment.newInstance() ).commit();
 				break;
 			case R.id.navigation_item_settings:
 				startActivity( new Intent( this, SettingsActivity.class ) );
@@ -211,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 			public void run()
 			{
 				getSupportFragmentManager().beginTransaction()
-				                           .replace( R.id.content_container, DailyReportFragment.newInstance() ).commit();
+										   .replace( R.id.content_container, DailyReportFragment.newInstance() ).commit();
 			}
 		}, DRAWER_CLOSE_DELAY_MS );
 
