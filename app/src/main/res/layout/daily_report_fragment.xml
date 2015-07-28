@@ -2,6 +2,20 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+			  android:layout_height="match_parent"
+			  android:padding="@dimen/default_padding">
 
+	<TextView
+		android:id="@+id/DAILY_REPORT_test"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+	<ProgressBar
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:id="@+id/progressBar"
+		android:indeterminate="true"
+		android:layout_gravity="center"
+		android:visibility="gone"/>
 </LinearLayout>

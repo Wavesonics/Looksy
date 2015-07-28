@@ -1,51 +1,53 @@
 <resources>
-    <string name="app_name">Looksy</string>
+	<string name="app_name">Looksy</string>
 
-    <string name="action_settings">Settings</string>
+	<string name="action_settings">Settings</string>
 
-    <string name="nav_drawer_open">Open</string>
-    <string name="nav_drawer_close">Close</string>
+	<string name="nav_drawer_open">Open</string>
+	<string name="nav_drawer_close">Close</string>
 
-    <string name="nav_item_home">Home</string>
-    <string name="nav_item_daily">Daily Stats</string>
-    <string name="nav_item_lifetime">Life Time Stats</string>
-    <string name="nav_item_settings">Settings</string>
+	<string name="nav_item_home">Home</string>
+	<string name="nav_item_daily">Daily Stats</string>
+	<string name="nav_item_lifetime">Life Time Stats</string>
+	<string name="nav_item_settings">Settings</string>
 
-    <string name="y_label">Unlocks</string>
+	<string name="y_label">Unlocks</string>
 
-    <string name="home_summary">Unlocks today: %1$d</string>
+	<string name="home_summary">Unlocks today: %1$d</string>
 
-    <string name="life_time_summary">Total unlocks so far today: %1$d\nTotal unlocks yesterday: %2$d\nTotal unlocks ever: %3$d</string>
+	<string name="life_time_summary">Total unlocks so far today: %1$d\nTotal unlocks yesterday: %2$d\nTotal unlocks ever: %3$d</string>
 
-    <string name="daily_chart_description">Looks by Day</string>
+	<string name="daily_chart_description">Looks by Day</string>
 
-    <string name="stack_label_1">early morning</string>
-    <string name="stack_label_2">morning</string>
-    <string name="stack_label_3">afternoon</string>
-    <string name="stack_label_4">evening</string>
+	<string name="stack_label_1">early morning</string>
+	<string name="stack_label_2">morning</string>
+	<string name="stack_label_3">afternoon</string>
+	<string name="stack_label_4">evening</string>
 
-    <string-array name="time_of_day">
-        <item>early morning</item>
-        <item>morning</item>
-        <item>afternoon</item>
-        <item>evening</item>
-    </string-array>
+	<string-array name="time_of_day">
+		<item>early morning</item>
+		<item>morning</item>
+		<item>afternoon</item>
+		<item>evening</item>
+	</string-array>
 
-    <string name="chart_today">Today</string>
+	<string name="chart_today">Today</string>
 
-    <string name="notification_report_title">Yesterday\'s Looksy Report</string>
-    <string name="notification_report_text">You checked your device %1$d times yesterday</string>
-    <string name="notification_report_full">You checked your device %1$d times yesterday\nYou checked most often in the %2$s</string>
+	<string name="notification_report_title">Yesterday\'s Looksy Report</string>
+	<string name="notification_report_text">You checked your device %1$d times yesterday</string>
+	<string name="notification_report_full">You checked your device %1$d times yesterday\nYou checked most often in the %2$s</string>
 
-    <string name="settings_reports_category_title">Daily Reports</string>
-    <string name="settings_reports_enable_title">Display reports</string>
-    <string name="settings_reports_enable_summary">Post a notification once a day with the last days usage info</string>
+	<string name="settings_reports_category_title">Daily Reports</string>
+	<string name="settings_reports_enable_title">Display reports</string>
+	<string name="settings_reports_enable_summary">Post a notification once a day with the last days usage info</string>
 
-    <string name="settings_reports_display_time_title">Display report at</string>
+	<string name="settings_reports_display_time_title">Display report at</string>
 
-    <string name="time_preference_positive">Set</string>
-    <string name="time_preference_negative">Cancel</string>
+	<string name="time_preference_positive">Set</string>
+	<string name="time_preference_negative">Cancel</string>
 
-    <string name="nav_header_title">Tap here to see yesterdays detailed report</string>
-    <string name="nav_header_total_title">Total looks yesterday:</string>
+	<string name="nav_header_title">Tap here to see yesterdays detailed report</string>
+	<string name="nav_header_total_title">Total looks yesterday:</string>
+
+	<string name="daily_report_full">You checked your device %1$d times yesterday.\n\nYou checked most often in the %2$s.\n\nToday\'s breakdown:\n[00:00–06:00]      %3$d\n[06:00–12:00]      %4$d\n[12:00–18:00]      %5$d\n[18:00–23:59]      %6$d\n\nYou looked at your device %7$d times this day last week.</string>
 </resources>
