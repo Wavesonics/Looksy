@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/DRAWER_report_header"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="250dp"
               android:background="@color/stack_early_morning">
 
+    <TextView
+        android:id="@+id/DRAWER_report_header_total"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </LinearLayout>
