@@ -9,7 +9,7 @@ public class ReportUtils
 {
 	public static DateTime getStartOfToday()
 	{
-		return DateTime.now().withHourOfDay( 0 );
+		return DateTime.now().withTimeAtStartOfDay();
 	}
 
 	public static DateTime getStartOfTomorrow()

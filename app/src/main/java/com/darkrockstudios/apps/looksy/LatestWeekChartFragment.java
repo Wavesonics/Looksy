@@ -119,10 +119,10 @@ public class LatestWeekChartFragment extends BaseFragment
 
 		float values[] = new float[]
 				                 {
-						                 statsForDay.m_earlyMorning,
-						                 statsForDay.m_morning,
+						                 statsForDay.m_evening,
 						                 statsForDay.m_afterNoon,
-						                 statsForDay.m_evening
+						                 statsForDay.m_morning,
+						                 statsForDay.m_earlyMorning
 				                 };
 
 		BarEntry barEntry = new BarEntry( values, index );

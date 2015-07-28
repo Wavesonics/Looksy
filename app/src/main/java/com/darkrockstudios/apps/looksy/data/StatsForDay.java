@@ -19,15 +19,15 @@ public class StatsForDay
 	{
 		m_startOfDay = startOfDay;
 
-		final DateTime sixHoursIn = startOfDay.plusHours( 6 );
-		final DateTime twelveHoursIn = startOfDay.plusHours( 12 );
-		final DateTime eighteenHoursIn = startOfDay.plusHours( 18 );
+		final DateTime sixHoursIn = startOfDay.withHourOfDay( 6 );
+		final DateTime twelveHoursIn = startOfDay.withHourOfDay( 12 );
+		final DateTime eighteenHoursIn = startOfDay.withHourOfDay( 18 );
 		final DateTime endOfDay = startOfDay.plusDays( 1 );
 
-		m_earlyMorning = Unlock.countAllInRange( eighteenHoursIn, endOfDay );
-		m_morning = Unlock.countAllInRange( twelveHoursIn, eighteenHoursIn );
-		m_afterNoon = Unlock.countAllInRange( sixHoursIn, twelveHoursIn );
-		m_evening = Unlock.countAllInRange( startOfDay, sixHoursIn );
+		m_earlyMorning = Unlock.countAllInRange( startOfDay, sixHoursIn );
+		m_morning = Unlock.countAllInRange( sixHoursIn, twelveHoursIn );
+		m_afterNoon = Unlock.countAllInRange( twelveHoursIn, eighteenHoursIn );
+		m_evening = Unlock.countAllInRange( eighteenHoursIn, endOfDay );
 	}
 
 	public int getTotal()
