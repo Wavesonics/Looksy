@@ -7,8 +7,8 @@ android {
         applicationId "com.darkrockstudios.apps.looksy"
         minSdkVersion 16
         targetSdkVersion 22
-        versionCode 5
-        versionName "0.05"
+        versionCode 6
+        versionName "0.06"
     }
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_7
