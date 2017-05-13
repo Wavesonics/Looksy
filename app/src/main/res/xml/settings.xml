@@ -15,6 +15,15 @@
     </PreferenceCategory>
 
     <PreferenceCategory
+        android:title="@string/settings_database_category_title">
+        <CheckBoxPreference
+            android:title="@string/settings_database_enable_title"
+            android:defaultValue="false"
+            android:summary="@string/settings_database_enable_summary"
+            android:key="external_database"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="Debug">
         <com.darkrockstudios.apps.looksy.settings.DebugInsertDataPreference/>
         <com.darkrockstudios.apps.looksy.settings.DebugSwapDatabasesPreference/>

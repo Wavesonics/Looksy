@@ -13,7 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="@dimen/default_padding"
-        android:background="@drawable/interaction_background">
+        android:background="@drawable/interaction_background"
+        android:clickable="true"
+        android:onClick="onHeaderClick">
 
         <TextView
             android:id="@+id/DRAWER_report_header_total_title"

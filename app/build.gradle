@@ -79,4 +79,6 @@ dependencies {
 
     compile 'commons-io:commons-io:2.4'
     compile 'com.jakewharton:process-phoenix:1.0.0'
+
+    compile 'com.github.paolorotolo:appintro:4.1.0'
 }

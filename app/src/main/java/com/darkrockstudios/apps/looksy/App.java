@@ -11,7 +11,9 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.Configuration;
 import com.darkrockstudios.apps.looksy.background.report.ReportService;
+import com.darkrockstudios.apps.looksy.data.Unlock;
 
 import java.io.File;
 
@@ -21,6 +23,8 @@ import java.io.File;
 public class App extends Application
 {
 	public static final String TAG = App.class.getSimpleName();
+
+	public static final String PREF_EXTERNAL_DB = "external_database";
 
 	public static final String EXTERNAL_APP_DIR = "Looksy";
 	public static final String DATABASE_DIR     = "databases";
@@ -32,9 +36,24 @@ public class App extends Application
 	{
 		super.onCreate();
 
-		m_databaseContext = new DatabaseContext( this );
-		ActiveAndroid.initialize( m_databaseContext );
 		PreferenceManager.setDefaultValues( this, R.xml.settings, false );
+
+		if( PreferenceManager.getDefaultSharedPreferences( this ).getBoolean( PREF_EXTERNAL_DB, false ) )
+		{
+			m_databaseContext = new ExternalDatabaseContext( this );
+		}
+		else
+		{
+			m_databaseContext = new InternalDatabaseContext( this );
+		}
+
+		Configuration dbConfiguration = new Configuration.Builder( m_databaseContext )
+				                                .setDatabaseName( "looksy.db" )
+				                                .setDatabaseVersion( 1 )
+				                                .addModelClass( Unlock.class )
+				                                .create();
+
+		ActiveAndroid.initialize( dbConfiguration );
 
 		// Make sure we have a report scheduled
 		ReportService.scheduleReport( this );
@@ -52,17 +71,50 @@ public class App extends Application
 		return m_databaseContext.getApplicationDatabaseFile();
 	}
 
+	private static abstract class DatabaseContext extends ContextWrapper
+	{
+		public DatabaseContext( Context base )
+		{
+			super( base );
+		}
+
+		public abstract File getApplicationDatabaseFile();
+	}
+
+	private static class InternalDatabaseContext extends DatabaseContext
+	{
+		private File m_databaseFile;
+
+		public InternalDatabaseContext( Context base )
+		{
+			super( base );
+		}
+
+		@Override
+		public File getApplicationDatabaseFile()
+		{
+			return m_databaseFile;
+		}
+
+		@Override
+		public SQLiteDatabase openOrCreateDatabase( String name, int mode, SQLiteDatabase.CursorFactory factory, DatabaseErrorHandler errorHandler )
+		{
+			m_databaseFile = getDatabasePath( name );
+			return SQLiteDatabase.openOrCreateDatabase( m_databaseFile.getAbsolutePath(), factory, errorHandler );
+		}
+	}
+
 	/**
 	 * Context wrapper to trick ActiveAndroid into writing it's database
 	 * into public storage. We want a much more durable database than private
 	 * storage will afford us. This will allow users to uninstall and reinstall
 	 * the app without losing our data.
 	 */
-	private static class DatabaseContext extends ContextWrapper
+	private static class ExternalDatabaseContext extends DatabaseContext
 	{
 		private File m_databaseFile;
 
-		public DatabaseContext( Context base )
+		public ExternalDatabaseContext( Context base )
 		{
 			super( base );
 		}

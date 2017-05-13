@@ -50,4 +50,8 @@
 	<string name="nav_header_total_title">Total looks yesterday:</string>
 
 	<string name="daily_report_full">You checked your device %1$d times yesterday.\n\nYou checked most often in the %2$s.\n\nYesterday\'s breakdown:\n[00:00–06:00]      %3$d\n[06:00–12:00]      %4$d\n[12:00–18:00]      %5$d\n[18:00–23:59]      %6$d\n\nYou looked at your device %7$d times this day last week.</string>
+
+	<string name="settings_database_category_title">Database</string>
+	<string name="settings_database_enable_title">Durable</string>
+	<string name="settings_database_enable_summary">Store the database in external storage. This will prevent data loss if the app is uninstalled.</string>
 </resources>

@@ -24,7 +24,6 @@ import com.f2prateek.dart.Optional;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import icepick.Icepick;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener
@@ -49,13 +48,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	@Bind(R.id.navigation)
 	NavigationView m_navigationView;
 
-	@Bind(R.id.DRAWER_report_header_total)
 	TextView m_lastDayReportTotalView;
 
-	@Bind(R.id.DRAWER_report_container)
 	View m_reportContainerView;
 
-	@Bind(R.id.DRAWER_report_progress_bar)
 	View m_reportProgressBar;
 
 	private Handler                     m_uiHandler;
@@ -74,8 +70,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
 		m_navigationView.setNavigationItemSelectedListener( this );
 
+		View navDrawerHeader = m_navigationView.getHeaderView( 0 );
+		m_lastDayReportTotalView = (TextView) navDrawerHeader.findViewById( R.id.DRAWER_report_header_total );
+		m_reportContainerView = navDrawerHeader.findViewById( R.id.DRAWER_report_container );
+		m_reportProgressBar = navDrawerHeader.findViewById( R.id.DRAWER_report_progress_bar );
+
 		m_drawerToggle = new LooksyActionBarDrawerToggle( this, m_drawerLayout );
-		m_drawerLayout.setDrawerListener( m_drawerToggle );
+		m_drawerLayout.addDrawerListener( m_drawerToggle );
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled( true );
 		getSupportActionBar().setHomeButtonEnabled( true );
@@ -172,7 +173,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 	}
 
 	@Override
-	public boolean onNavigationItemSelected( final MenuItem menuItem )
+	public boolean onNavigationItemSelected( @NonNull final MenuItem menuItem )
 	{
 		menuItem.setChecked( true );
 
@@ -259,8 +260,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 		return handled;
 	}
 
-	@OnClick(R.id.DRAWER_report_container)
-	public void onHeaderClick()
+	public void onHeaderClick( View view )
 	{
 		m_uiHandler.postDelayed( new Runnable()
 		{
